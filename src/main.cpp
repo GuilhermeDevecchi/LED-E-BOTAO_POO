@@ -1,12 +1,12 @@
 #include <Arduino.h>
-#include "led.h"
+/*#include "led.h"
 
 Led ledAmareloA(48);
 Led ledVermelhoA(0);
 Led ledVerdeA(35);
 
 
-void setup() 
+void setup()
 {
  ledAmareloA.iniciar();
  ledAmareloA.ativarPiscar();
@@ -24,5 +24,17 @@ void loop()
   ledVermelhoA.atualizar();
   ledVerdeA.atualizar();
 
- }
+ }*/
+#include "botao.h"
 
+Botao boot(0);
+
+void setup()
+{
+    boot.iniciar();
+    Serial.begin(9600);
+}
+void loop()
+{
+    boot.atualizar();
+}

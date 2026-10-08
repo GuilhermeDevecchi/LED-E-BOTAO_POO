@@ -14,27 +14,61 @@ void Botao::atualizar()
     _pressionou = false;
     _soltou = false;
 
-    bool _estadoAtualBotao = digitalRead(_pinBotao);
+    _estadoAtualBotao = digitalRead(_pinBotao);
+
+    if(tempoDecorrido() < _tempoDebounce_ms) return;
+
+    if(_estadoAtualBotao == _estadoAnteriorBotao) return;
+
+    _estadoAnteriorBotao = _estadoAtualBotao;
+
     if (_estadoAtualBotao != _estadoAnteriorBotao)
     {
+        _estadoAnteriorBotao = _estadoAtualBotao;
         _ultimaMudanca_ms = millis();
+        return;
     }
-    
-    else if (millis() - _ultimaMudanca_ms > _tempoDebounce_ms)
-    {
-        const bool acaoExecutada = (_estadoUltimaAcao == _estadoAtualBotao);
-        if (!acaoExecutada)
-        {
+    if (tempoDecorrido() > _tempoDebounce_ms)
+    return;
+   
+      
             _estadoUltimaAcao = _estadoAtualBotao;
 
             const bool botaoPressionado = !_estadoAtualBotao;
 
-            botaoPressionado
-                ? _pressionou = true
-                : _soltou = true;
+           botaoPressionado
+               ? _pressionou = true
+                : _soltou = true;         
         }
-    }
-}
+
+
+// void Botao::atualizar()
+// {
+//     _pressionou = false;
+//     _soltou = false;
+
+//     bool _estadoAtualBotao = digitalRead(_pinBotao);
+//     if (_estadoAtualBotao != _estadoAnteriorBotao)
+//     {
+//         _estadoAnteriorBotao = _estadoAtualBotao;
+//         _ultimaMudanca_ms = millis();
+//     }
+    
+//     else if (tempoDecorrido() > _tempoDebounce_ms)
+//     {
+//         const bool acaoExecutada = (_estadoUltimaAcao == _estadoAtualBotao);
+//         if (!acaoExecutada)
+//         {
+//             _estadoUltimaAcao = _estadoAtualBotao;
+
+//             const bool botaoPressionado = !_estadoAtualBotao;
+
+//             botaoPressionado
+//                 ? _pressionou = true
+//                 : _soltou = true;
+//         }
+//     }
+// }
 bool Botao::pressionou()
 {
     return _pressionou;
@@ -43,4 +77,8 @@ bool Botao::pressionou()
 bool Botao::soltou()
 {
     return _soltou;
+}
+uint32_t Botao::tempoDecorrido()
+{
+    return millis() - _ultimaMudanca_ms;
 }
